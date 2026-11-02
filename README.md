@@ -16,6 +16,12 @@ must not leave your control.
 
 Pin the `uses:` line to a release tag or commit once there is one: the workflow runs with your secrets.
 
+## Advisory only
+
+Eve is a reviewer, not a security gate. Do not make "Eve - Go/No-Go Decision" a required check: a failed or partial review ends
+neutral, never as a failure, and a pull request's text can try to talk the models into dismissing a finding. A person still decides
+what merges.
+
 ## What it does and does not do
 
 See the header of [`.github/workflows/review.yml`](.github/workflows/review.yml). It never checks out a pull request's code (it reads
