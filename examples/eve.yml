@@ -1,0 +1,22 @@
+# Put this file at .github/workflows/eve.yml in a repository to have Eve review its pull requests.
+# Also set the repository secret NVIDIA_API_KEY (see the README of justwaters/eve).
+name: Eve
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review]
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  checks: write
+
+jobs:
+  eve:
+    uses: justwaters/eve/.github/workflows/review.yml@main
+    secrets:
+      NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+      AI_REVIEW_APP_PRIVATE_KEY: ${{ secrets.AI_REVIEW_APP_PRIVATE_KEY }}

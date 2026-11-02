@@ -1,0 +1,15 @@
+name: Tests
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  eve-checks:
+    name: Eve's checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test the checking code with a fake model (no key, no network)
+        run: python3 eval/test_eve.py
