@@ -1,7 +1,7 @@
 # Eve
 
-Multi-model AI pull request review, as a reusable GitHub Actions workflow. Eight NVIDIA-hosted models review a pull request's diff, a
-ninth consolidates them, and every blocker and warning is checked against the code before it is shown.
+Multi-model AI pull request review, as a reusable GitHub Actions workflow. Seven NVIDIA-hosted models review a pull request's diff, the
+largest of them consolidates their answers, and every blocker and warning is checked against the code before it is shown.
 
 **The diff, title and description of each reviewed pull request are sent to NVIDIA.** Do not enable Eve on a repository whose code
 must not leave your control.
