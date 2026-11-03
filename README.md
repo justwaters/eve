@@ -30,3 +30,7 @@ the diff through the API), because the calling workflow runs on `pull_request_ta
 ## Tests
 
 `python3 eval/test_eve.py` tests the checking code with a fake model. See [`eval/README.md`](eval/README.md).
+
+## Licence
+
+MIT. See [`LICENSE`](LICENSE).
