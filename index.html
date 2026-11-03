@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Eve: a second opinion on every pull request</title>
+<meta name="description" content="Eve is a free GitHub Actions workflow. Several AI models read each pull request, a final model combines what they found, and every serious finding is checked against the code before you see it. Advisory only.">
+<meta property="og:title" content="Eve: a second opinion on every pull request">
+<meta property="og:description" content="Multi-model AI pull request review as a reusable GitHub Actions workflow. Every finding is checked against the code.">
+<meta name="color-scheme" content="light dark">
+<style>
+  :root { --paper:#f2f3f1; --surface:#fff; --raised:#e9ebe8; --ink:#1c1f21; --ink-2:#5f666b; --rule:#d9dcd8; --ok:#2f8463; --warn:#a47f12;
+          --sans: system-ui, -apple-system, "Segoe UI", sans-serif; --mono: ui-monospace, "SF Mono", Menlo, monospace; }
+  @media (prefers-color-scheme: dark) { :root { --paper:#1a1e21; --surface:#21262a; --raised:#2a3035; --ink:#e4e6e3; --ink-2:#8f979c; --rule:#30363a; --ok:#49a985; --warn:#cfa52a; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--paper); color:var(--ink); font:400 17px/1.6 var(--sans); -webkit-font-smoothing:antialiased; }
+  a { color:inherit; text-underline-offset:3px; }
+  :focus-visible { outline:2px solid var(--ink); outline-offset:3px; border-radius:3px; }
+  code, pre { font-family:var(--mono); }
+  p code, li code { font-size:.86em; background:var(--raised); border-radius:4px; padding:1px 5px; overflow-wrap:anywhere; }
+  .wrap { max-width:880px; margin:0 auto; padding:0 24px; }
+  header { border-bottom:1px solid var(--rule); }
+  header .wrap { display:flex; align-items:center; min-height:60px; gap:16px; }
+  .mark { font-weight:700; font-size:20px; letter-spacing:-.2px; text-decoration:none; }
+  nav { margin-left:auto; display:flex; gap:4px; }
+  nav a { display:inline-flex; align-items:center; min-height:44px; padding:0 12px; color:var(--ink-2); text-decoration:none; border-radius:6px; font-size:15px; }
+  nav a:hover { color:var(--ink); background:var(--raised); }
+  .hero { padding:72px 0 36px; }
+  h1 { font-size:clamp(36px,6vw,64px); line-height:1.04; letter-spacing:-.03em; font-weight:650; margin:0 0 20px; max-width:16ch; }
+  .lead { font-size:20px; color:var(--ink-2); max-width:56ch; margin:0 0 28px; }
+  .btn { display:inline-flex; align-items:center; min-height:46px; padding:0 20px; border-radius:8px; font-weight:600; text-decoration:none; border:1px solid var(--rule); background:var(--surface); }
+  .btn:hover { background:var(--raised); }
+  section { padding:36px 0; border-top:1px solid var(--rule); }
+  h2 { font-size:26px; letter-spacing:-.02em; margin:0 0 14px; }
+  h3 { font-size:17px; margin:0 0 4px; }
+  ol.steps { list-style:none; padding:0; margin:0; display:grid; gap:12px; counter-reset:s; }
+  ol.steps li { counter-increment:s; background:var(--surface); border:1px solid var(--rule); border-radius:10px; padding:14px 18px 14px 56px; position:relative; }
+  ol.steps li::before { content:counter(s); position:absolute; left:18px; top:14px; font-family:var(--mono); color:var(--ink-2); }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:12px; }
+  .card { background:var(--surface); border:1px solid var(--rule); border-radius:10px; padding:16px 18px; }
+  .card p { margin:0; color:var(--ink-2); font-size:16px; }
+  .review { background:var(--surface); border:1px solid var(--rule); border-radius:10px; padding:18px 20px; font-size:16px; }
+  .review .v { font-weight:650; }
+  .review small { color:var(--ink-2); display:block; margin-top:10px; }
+  pre { background:var(--surface); border:1px solid var(--rule); border-radius:10px; padding:16px 18px; overflow-x:auto; font-size:14px; line-height:1.5; margin:12px 0; }
+  .note { border-left:3px solid var(--warn); padding:2px 0 2px 16px; margin:14px 0; }
+  table { border-collapse:collapse; width:100%; font-size:16px; }
+  td { border-top:1px solid var(--rule); padding:10px 8px; vertical-align:top; }
+  td:first-child { white-space:nowrap; padding-right:20px; }
+  footer { border-top:1px solid var(--rule); padding:28px 0 48px; color:var(--ink-2); font-size:15px; }
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <a class="mark" href="#">Eve</a>
+  <nav aria-label="Sections"><a href="#how">How it works</a><a href="#use">Turn it on</a><a href="#limits">Limits</a><a href="https://github.com/justwaters/eve">GitHub</a></nav>
+</div></header>
+
+<main>
+<div class="wrap">
+  <div class="hero">
+    <h1>A second opinion on every pull request.</h1>
+    <p class="lead">Eve is a reusable GitHub Actions workflow. Several AI models read each pull request, one more combines what they found, and every serious finding is checked against the code before it reaches you.</p>
+    <a class="btn" href="https://github.com/justwaters/eve">View on GitHub</a>
+  </div>
+
+  <section id="what">
+    <h2>What she posts</h2>
+    <p>One comment on the pull request, and two checks. This is a real review of a one-line change:</p>
+    <div class="review" role="img" aria-label="Example Eve review">
+      <div>🤖 <strong>Automated Code Review</strong></div>
+      <div class="v">🚦 Executive Verdict: No verified blockers.</div>
+      <div>The PR is stable and ready to merge; it adds only an inert HTML comment to README.md and introduces no functional, security, or performance changes.</div>
+      <small>Models that failed to respond are listed at the bottom of every review, so a quiet model is never hidden.</small>
+    </div>
+  </section>
+
+  <section id="how">
+    <h2>How it works</h2>
+    <ol class="steps">
+      <li><h3>Read the diff</h3>Eve gets the pull request's diff through the GitHub API. She never checks out the pull request's code.</li>
+      <li><h3>Ask eight models</h3>Eight NVIDIA-hosted models review the diff independently, in parallel.</li>
+      <li><h3>Combine</h3>A ninth model merges their answers into one list of findings.</li>
+      <li><h3>Check every claim</h3>Each blocker and warning is checked against the real file. A finding whose quoted code isn't there is dropped, and one that can't be proved is listed apart, never as a finding.</li>
+      <li><h3>Rate by who could trigger it</h3>A confirmed finding is rated by who could hit it and what they already hold, so a bug only an admin can reach is not shouted like an open hole.</li>
+    </ol>
+  </section>
+
+  <section id="can">
+    <h2>What she can do</h2>
+    <div class="grid">
+      <div class="card"><h3>Review on every push</h3><p>Opened, updated, reopened or marked ready. A newer push cancels a review that is still running.</p></div>
+      <div class="card"><h3>Know your project</h3><p>Put facts the code doesn't show in <code>.github/eve-context.md</code>, and she reads them before she judges.</p></div>
+      <div class="card"><h3>Take commands</h3><p>Owners, members and collaborators can comment <code>review</code>, <code>pause</code>, <code>resume</code> or <code>help</code> addressed to her.</p></div>
+      <div class="card"><h3>Speak as an App</h3><p>Optionally post under a GitHub App's name and avatar instead of <code>github-actions[bot]</code>.</p></div>
+      <div class="card"><h3>Stay honest</h3><p>A failed or partial review ends neutral, never as a failure, and the models that didn't answer are named.</p></div>
+      <div class="card"><h3>Be tested</h3><p>The checking code has its own tests, run with a fake model, in the repository.</p></div>
+    </div>
+  </section>
+
+  <section id="use">
+    <h2>Turn it on in a repository</h2>
+    <ol class="steps">
+      <li>Copy <a href="https://github.com/justwaters/eve/blob/main/examples/eve.yml"><code>examples/eve.yml</code></a> to <code>.github/workflows/eve.yml</code>.</li>
+      <li>Add the repository secret <code>NVIDIA_API_KEY</code> to that repository. Secrets are per repository.</li>
+      <li>Pin the <code>uses:</code> line to a commit: the workflow runs with your secrets.</li>
+    </ol>
+    <pre>jobs:
+  eve:
+    uses: justwaters/eve/.github/workflows/review.yml@&lt;commit&gt;
+    secrets:
+      NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}</pre>
+    <p>Set the repository variable <code>AI_REVIEW_ENABLED=false</code> to turn her off again.</p>
+  </section>
+
+  <section id="limits">
+    <h2>What to know first</h2>
+    <div class="note"><strong>Your code leaves your control.</strong> The diff, title and description of each reviewed pull request are sent to NVIDIA. Don't enable Eve on a repository whose code must stay in-house.</div>
+    <div class="note"><strong>She is advisory, not a security gate.</strong> Don't make her checks required: a pull request's own text can try to talk a model into dismissing a finding. A person still decides what merges.</div>
+    <table>
+      <tr><td>Cost</td><td>Free on public repositories. On private ones she uses your Actions minutes (about 7 minutes per review), plus whatever your NVIDIA key costs.</td></tr>
+      <tr><td>Big diffs</td><td>Only the first 60,000 characters are reviewed.</td></tr>
+      <tr><td>Speed</td><td>A few minutes: the hosted models are shared, and a slow one can take up to 4 minutes before it's marked as failed.</td></tr>
+    </table>
+  </section>
+</div>
+</main>
+
+<footer><div class="wrap">Eve is free software under the <a href="https://github.com/justwaters/eve/blob/main/LICENSE">MIT licence</a>. Made by <a href="https://github.com/justwaters">justwaters</a>.</div></footer>
+</body>
+</html>
