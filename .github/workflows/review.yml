@@ -1,7 +1,7 @@
 # Eve: multi-model AI pull request review, as a reusable workflow. A repository calls it with a short workflow of its own
 # (see examples/eve.yml); the review logic lives here once.
 #
-# - Eight NVIDIA-hosted models review the diff, a ninth consolidates them. The diff, title and description are sent to
+# - Seven NVIDIA-hosted models review the diff, the largest of them consolidates them. The diff, title and description are sent to
 #   NVIDIA. Set the repository variable AI_REVIEW_ENABLED=false in a calling repository to turn Eve off there.
 # - It never checks out the pull request's code (it reads the diff through the API), because the caller runs it with
 #   pull_request_target and it holds secrets. Keep it that way: no `actions/checkout` of the pull request, ever.
