@@ -9,7 +9,9 @@ must not leave your control.
 ## Turn it on in a repository
 
 1. Copy [`examples/eve.yml`](examples/eve.yml) to `.github/workflows/eve.yml`.
-2. Add the repository secret `NVIDIA_API_KEY`.
+2. Add the repository secret `NVIDIA_API_KEY` to **that** repository. A secret stored in this repository is not visible to other
+   repositories, and a personal account has no shared secrets, so each repository that uses Eve needs its own copy
+   (`gh secret set NVIDIA_API_KEY --repo OWNER/REPO`).
 3. Optional: `.github/eve-context.md` on the default branch holds facts the code does not show (see
    [the example](examples/eve-context.example.md)); the variable `AI_REVIEW_ENABLED=false` turns Eve off; `AI_REVIEW_APP_ID` plus the
    secret `AI_REVIEW_APP_PRIVATE_KEY` make it comment as a GitHub App instead of `github-actions[bot]`.
@@ -30,3 +32,7 @@ the diff through the API), because the calling workflow runs on `pull_request_ta
 ## Tests
 
 `python3 eval/test_eve.py` tests the checking code with a fake model. See [`eval/README.md`](eval/README.md).
+
+## Licence
+
+MIT. See [`LICENSE`](LICENSE).
