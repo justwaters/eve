@@ -84,6 +84,12 @@
   th, td { text-align:left; padding:6px 10px; border:1px solid var(--rule); vertical-align:top; }
   th { background:var(--raised); font-weight:600; }
   td code { font-size:12.5px; }
+  /* On a phone the table is wider than the card and scrolls sideways unseen, hiding the summary. */
+  @media (max-width:640px) {
+    th, td { padding:5px 7px; font-size:12.5px; }
+    td code { overflow-wrap:anywhere; }
+    th:nth-child(4), td:nth-child(4) { display:none; }
+  }
   .tag-b { color:var(--bad); font-weight:650; } .tag-w { color:var(--warn); font-weight:650; }
   h4 { font-size:15px; margin:14px 0 6px; }
   ul.f { margin:0 0 8px; padding-left:20px; } ul.f li { margin:2px 0; }
